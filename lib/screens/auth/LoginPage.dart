@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:newsify/screens/home/HomePage.dart';
+import 'package:newsify/services/AuthServices.dart';
 import 'SignUp.dart';
 
 class LoginPage extends StatelessWidget {
@@ -32,7 +35,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
-
+  AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +69,19 @@ class _LoginFormState extends State<LoginForm> {
           // Add login actions
           String email = emailController.text;
           String pw = pwController.text;
-
+          if(email.isNotEmpty && pw.isNotEmpty){
+            dynamic user = await authService.userLogIn(email, pw);
+            print(user);
+            if(user != null){
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+            }
+            else{
+              // add alert to show "Login failed"
+            }
+          }
+          else{
+            // add alert to show "Enter all details"
+          }
         },
           // style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 28),
           //     shape: RoundedRectangleBorder(

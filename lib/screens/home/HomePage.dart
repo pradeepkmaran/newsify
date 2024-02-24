@@ -13,6 +13,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("HomePage"),
+        backgroundColor: Colors.amberAccent,
+        centerTitle: true,
       ),
     );
   }

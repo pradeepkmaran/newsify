@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:newsify/HomePage.dart';
 
+import 'package:newsify/screens/home/HomePage.dart';
+import 'package:newsify/services/AuthServices.dart';
 import 'LoginPage.dart';
 
 class SignUp extends StatelessWidget {
@@ -37,7 +38,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController pwController = TextEditingController();
   final TextEditingController conPwController = TextEditingController();
-
+  AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +86,15 @@ class _SignUpFormState extends State<SignUpForm> {
           String conpw = conPwController.text;
           if(email.isNotEmpty && pw.isNotEmpty && conpw.isNotEmpty){
             if(pw == conpw){
-              await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(email: email, password: pw)
-                  .then((value){
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
-                  })
-                  .onError((error, stackTrace) {
-                    print("Error ${error.toString()}");
-                  });
-              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
+              dynamic user = await authService.userSignUp(email, pw);
+              print(user);
+              if(user != null) {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+              }
+              else{
+                // add alert
+                print("Login failed");
+              }
             }
             else{
               // add alert to show "PWs do not match"
