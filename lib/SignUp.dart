@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:newsify/HomePage.dart';
+
 import 'LoginPage.dart';
 
 class SignUp extends StatelessWidget {
@@ -74,15 +78,33 @@ class _SignUpFormState extends State<SignUpForm> {
           obscureText: true,
         ),
         const SizedBox(height: 20.0),
-        ElevatedButton(onPressed: () {
+        ElevatedButton(onPressed: () async {
           // Add SignUp actions
           String email = emailController.text;
           String pw = pwController.text;
           String conpw = conPwController.text;
+          if(email.isNotEmpty && pw.isNotEmpty && conpw.isNotEmpty){
+            if(pw == conpw){
+              await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(email: email, password: pw)
+                  .then((value){
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
+                  })
+                  .onError((error, stackTrace) {
+                    print("Error ${error.toString()}");
+                  });
+              // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePage()));
+            }
+            else{
+              // add alert to show "PWs do not match"
+            }
+          }
+          else{
+            // add alert to display "Fill all details"
+          }
 
         },
           child: Text('SignUp'),
-
           ),
 
         SizedBox(height: 20,),
