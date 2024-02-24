@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1057982402076",
+    "project_id": "newsify-d7d9a",
+    "storage_bucket": "newsify-d7d9a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057982402076:android:f23d885482acbec61dd9d9",
+        "android_client_info": {
+          "package_name": "com.bholechature.newsify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF90W9dtsTJbBVS8BZLFjJspR4jPSys-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

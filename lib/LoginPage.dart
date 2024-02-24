@@ -68,10 +68,10 @@ class _LoginFormState extends State<LoginForm> {
           String pw = pwController.text;
 
         },
-          style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 28),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              )),
+          // style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 28),
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(10.0),
+          //     )),
           child: const Text('Login'),
         ),
         const SizedBox(height: 20,),
