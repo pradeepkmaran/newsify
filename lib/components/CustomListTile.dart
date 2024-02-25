@@ -35,7 +35,7 @@ Widget customListTile(Article article, BuildContext context) {
               //let's add the height
 
               image: DecorationImage(
-                  image: NetworkImage(article.urlToImage), fit: BoxFit.cover).onError(DecorationImage(image: Ima)),
+                  image: NetworkImage(article.urlToImage), fit: BoxFit.cover),
               borderRadius: BorderRadius.circular(12.0),
             ),
           ),
