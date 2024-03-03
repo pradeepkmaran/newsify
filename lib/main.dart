@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +16,8 @@ void main() async {
   Timer.periodic(new Duration(seconds: 3600), (timer) {
     firestoreServices.fetchAndAddNews();
   });
+  FirestoreServices _firestoreservices = FirestoreServices();
+  _firestoreservices.ensureCommentsCollectionAndArticleIdField();
   runApp(
       MaterialApp(
         debugShowCheckedModeBanner: false,

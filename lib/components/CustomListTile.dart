@@ -1,19 +1,15 @@
 import 'package:newsify/models/ArticleModel.dart';
 import 'package:newsify/pages/ArticleDetailsPage.dart';
 import 'package:flutter/material.dart';
+import 'package:newsify/screens/drawer/Comments.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 Widget customListTile(Map<String, dynamic> article, BuildContext context) {
   return InkWell(
-    onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ArticlePage(
-                article: article,
-              )));
+    onTap: () async {
+      // add web view code.
     },
     child: Container(
       margin: EdgeInsets.all(12.0),
@@ -45,19 +41,17 @@ Widget customListTile(Map<String, dynamic> article, BuildContext context) {
           SizedBox(
             height: 8.0,
           ),
-          Container(
-            padding: EdgeInsets.all(6.0),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: Text(
-              article['source'],
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(onPressed: (){
 
+              }, icon: Icon(Icons.thumb_up_alt_outlined)),
+
+              IconButton(onPressed: () async {
+                await Navigator.push(context, MaterialPageRoute(builder: (context)=> CommentBox(articleId: article['articleId'])));
+              }, icon: Icon(Icons.chat)),
+            ],
           ),
           SizedBox(
             height: 8.0,
@@ -68,7 +62,16 @@ Widget customListTile(Map<String, dynamic> article, BuildContext context) {
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
             ),
-          )
+          ),
+          Text(
+              article['source'],
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          // Text(
+          //     article['articleId'] == null? "No id": article['articleId']
+          // )
         ],
       ),
     ),

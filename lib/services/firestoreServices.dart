@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
@@ -7,13 +9,12 @@ class FirestoreServices {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addUsername(String uid, String username) async {
-    await _firestore.collection('users').add({"uid": uid, "username": username});
+    await _firestore.collection('users').doc(uid).set({"uid": uid, "username": username});
   }
 
   Future<void> fetchAndAddNews() async {
     try {
-      Uri url = Uri.parse(
-          'https://api.thenewsapi.com/v1/news/all?api_token=RPiJb7Ez2co0n7zVEmHP4QPdLMVKT0fte9xIsFKk&language=en&limit=3');
+      Uri url = Uri.parse('https://api.thenewsapi.com/v1/news/all?api_token=RPiJb7Ez2co0n7zVEmHP4QPdLMVKT0fte9xIsFKk&language=en&limit=3');
       Response response = await get(url);
 
       if (response.statusCode == 200) {
@@ -40,7 +41,9 @@ class FirestoreServices {
                 'source': article['source'],
                 'categories': article['categories'],
                 'created': Timestamp.now(),
+                'articleId': uniqueIdentifier,
               }, SetOptions(merge: true));
+              docRef.collection('comments').add({});
               print('Added new article: $uniqueIdentifier');
             } else {
               print('Article already exists: $uniqueIdentifier');
@@ -118,4 +121,61 @@ class FirestoreServices {
       return 0; // Return false in case of any error or exception
     }
   }
+
+  Future<void> addCommentsToDB(String userId, String articleId, String comment) async {
+    await _firestore.collection('news')
+        .doc(articleId)
+        .collection('comments')
+        .add({
+          'userId': userId,
+          'comment': comment,
+          "likes": 0,
+          'created': Timestamp.now()
+        });
+  }
+
+  Future<List<Map<String, dynamic>>> fetchCommentsFromDB(String articleId) async {
+    try {
+      print("***************************Fetching comments***********************************");
+      List<Map<String, dynamic>> comments = [];
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('news')
+          .doc(articleId)
+          .collection('comments')
+          .orderBy("created", descending: false)
+          .get();
+      querySnapshot.docs.forEach((DocumentSnapshot doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        comments.add(data);
+      });
+      print(comments);
+      return comments;
+    } catch (error) {
+      print('Error fetching articles from Firestore: $error');
+      return [];
+    }
+  }
+
+
+  Future<void> ensureCommentsCollectionAndArticleIdField() async {
+    try {
+      CollectionReference newsCollection = FirebaseFirestore.instance.collection('news');
+
+      QuerySnapshot newsSnapshot = await newsCollection.get();
+
+      for (QueryDocumentSnapshot newsDoc in newsSnapshot.docs) {
+        QuerySnapshot commentsSnapshot = await newsDoc.reference.collection('comments').get();
+        if (commentsSnapshot.docs.isEmpty) {
+          await newsDoc.reference.collection('comments').add({});
+        }
+        Map<String, dynamic>? data = newsDoc.data() as Map<String, dynamic>?;
+        if (data == null || !data.containsKey('articleId')) {
+          await newsDoc.reference.update({'articleId': newsDoc.id});
+        }
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
 }
