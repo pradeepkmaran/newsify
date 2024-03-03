@@ -2,7 +2,7 @@ import 'package:newsify/models/ArticleModel.dart';
 import 'package:flutter/material.dart';
 
 class ArticlePage extends StatelessWidget {
-  final Article article;
+  final Map<String, dynamic> article;
 
   ArticlePage({required this.article});
 
@@ -10,7 +10,7 @@ class ArticlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(article.title),
+        title: Text(article['title']),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -25,7 +25,7 @@ class ArticlePage extends StatelessWidget {
                 //let's add the height
 
                 image: DecorationImage(
-                    image: NetworkImage(article.urlToImage), fit: BoxFit.cover),
+                    image: NetworkImage(article['imageUrl']), fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(12.0),
               ),
             ),
@@ -39,7 +39,7 @@ class ArticlePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30.0),
               ),
               child: Text(
-                article.source.name,
+                "Testing under articledetailspage",
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -49,7 +49,7 @@ class ArticlePage extends StatelessWidget {
               height: 8.0,
             ),
             Text(
-              article.description,
+              article['description'],
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0,
