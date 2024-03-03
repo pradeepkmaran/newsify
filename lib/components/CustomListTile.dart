@@ -49,7 +49,7 @@ Widget customListTile(Map<String, dynamic> article, BuildContext context) {
               borderRadius: BorderRadius.circular(30.0),
             ),
             child: Text(
-              "testing under customlisttile",
+              article['source'],
               style: TextStyle(
                 color: Colors.white,
               ),
