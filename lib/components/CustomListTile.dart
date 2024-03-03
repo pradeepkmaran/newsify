@@ -1,6 +1,9 @@
 import 'package:newsify/models/ArticleModel.dart';
 import 'package:newsify/pages/ArticleDetailsPage.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 Widget customListTile(Map<String, dynamic> article, BuildContext context) {
   return InkWell(
@@ -49,11 +52,12 @@ Widget customListTile(Map<String, dynamic> article, BuildContext context) {
               borderRadius: BorderRadius.circular(30.0),
             ),
             child: Text(
-              "testing under customlisttile",
+              article['source'],
               style: TextStyle(
                 color: Colors.white,
               ),
             ),
+
           ),
           SizedBox(
             height: 8.0,
