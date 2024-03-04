@@ -73,7 +73,7 @@ class _LoginFormState extends State<LoginForm> {
             dynamic user = await authService.userLogIn(email, pw);
             print(user);
             if(user != null){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage()));
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage(category: "general",)));
             }
             else{
               // add alert to show "Login failed"

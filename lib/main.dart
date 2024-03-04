@@ -27,7 +27,7 @@ void main() async {
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.active){
               if(snapshot.hasData){
-                return HomePage();
+                return HomePage(category: "general",);
               }
               else if(snapshot.hasError){
                 return Center(

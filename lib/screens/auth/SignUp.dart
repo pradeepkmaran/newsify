@@ -112,7 +112,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   if (pw == conpw) {
                     authService.userSignUp(email, pw, username).then((user) {
                       if (user != null) {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(category: "general",)));
                       } else {
                         // Show alert for login failure
                         print("Login failed");

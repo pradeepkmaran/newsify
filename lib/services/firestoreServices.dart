@@ -83,6 +83,31 @@ class FirestoreServices {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchCategoryNewsFromDB(String cat) async {
+    try {
+      List<Map<String, dynamic>> articles = [];
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('news')
+      //.where("categories", arrayContains: cat)
+          .orderBy("created", descending: true)
+          .get();
+      // print(querySnapshot);
+
+      querySnapshot.docs.forEach((DocumentSnapshot doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        if (_isValidArticleData(data) && data['categories'].contains(cat)) {
+          articles.add(data);
+        }
+      });
+      print(articles);
+      return articles;
+    } catch (error) {
+      print('Error fetching articles from Firestore: $error');
+
+      return [];
+    }
+  }
+
   bool _isValidArticle(Map<String, dynamic> article) {
     return article['imageUrl'] != "" &&
         article['title'] != "" &&
