@@ -42,8 +42,10 @@ class FirestoreServices {
                 'categories': article['categories'],
                 'created': Timestamp.now(),
                 'articleId': uniqueIdentifier,
+                'likes': 0
               }, SetOptions(merge: true));
               docRef.collection('comments').add({});
+              docRef.collection('likes').add({});
               print('Added new article: $uniqueIdentifier');
             } else {
               print('Article already exists: $uniqueIdentifier');
@@ -160,21 +162,61 @@ class FirestoreServices {
   Future<void> ensureCommentsCollectionAndArticleIdField() async {
     try {
       CollectionReference newsCollection = FirebaseFirestore.instance.collection('news');
-
       QuerySnapshot newsSnapshot = await newsCollection.get();
-
+      print("Checking..");
       for (QueryDocumentSnapshot newsDoc in newsSnapshot.docs) {
         QuerySnapshot commentsSnapshot = await newsDoc.reference.collection('comments').get();
         if (commentsSnapshot.docs.isEmpty) {
           await newsDoc.reference.collection('comments').add({});
         }
+        QuerySnapshot likesSnapshot = await newsDoc.reference.collection('likes').get();
+        // print(likesSnapshot.docs);
+        if (likesSnapshot.docs.isEmpty) {
+          await newsDoc.reference.collection('likes').add({});
+        }
         Map<String, dynamic>? data = newsDoc.data() as Map<String, dynamic>?;
         if (data == null || !data.containsKey('articleId')) {
           await newsDoc.reference.update({'articleId': newsDoc.id});
         }
+        if(data == null ||  !data.containsKey('likes')){
+          await newsDoc.reference.update({'likes': 0});
+        }
       }
     } catch (e) {
       print('Error: $e');
+    }
+  }
+
+  Future<void> updateLikesInNews(String articleId, bool isLiked, String userId) async {
+    CollectionReference newsCollection = FirebaseFirestore.instance.collection('news');
+    DocumentReference articleRef = newsCollection.doc(articleId);
+    DocumentSnapshot snapshot = await articleRef.get();
+    int curLikes = (snapshot.data() as Map<String, dynamic>)['likes'] ?? 0;
+    int newLikes = isLiked ? curLikes + 1 : curLikes - 1;
+    await articleRef.update({'likes': newLikes});
+    if(isLiked){
+      print("Added like of user ${userId}");
+      articleRef.collection('likes').doc(userId).set({});
+    }
+    else{
+      print("Removed like of user ${userId}");
+      articleRef.collection('likes').doc(userId).delete();
+    }
+  }
+
+  Future<bool> checkLiked(String articleId, String userId) async {
+    try {
+      DocumentSnapshot res = await FirebaseFirestore.instance
+          .collection('news')
+          .doc(articleId)
+          .collection('likes')
+          .doc(userId)
+          .get();
+
+      return res.exists;
+    } catch (e) {
+      print('Error checking like status: $e');
+      return false; // Return false in case of an error
     }
   }
 

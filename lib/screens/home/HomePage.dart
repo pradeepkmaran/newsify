@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
               List<Map<String, dynamic>>? articles = snapshot.data;
               return ListView.builder(
                 itemCount: articles?.length,
-                itemBuilder: (context, index) => customListTile(articles![index], context),
+                itemBuilder: (context, index) => CustomListTile(article: articles![index], context: context),
               );
             } else {
               return Center(
