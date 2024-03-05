@@ -76,17 +76,13 @@ class _LoginFormState extends State<LoginForm> {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePage(category: "general",)));
             }
             else{
-              // add alert to show "Login failed"
+              showAlert("User doesnt exist", "Signup to enter the app.");
             }
           }
           else{
-            // add alert to show "Enter all details"
+            showAlert("Fields empty", "Enter all fields to login");
           }
         },
-          // style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 28),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(10.0),
-          //     )),
           child: const Text('Login'),
         ),
         const SizedBox(height: 20,),
@@ -104,22 +100,22 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   // This function is to show alert dialogs
-  // showAlert(String alertName, String text){
-  //   String actionBtn = "OK";
-  //   return showDialog(context: context, builder: (BuildContext context){
-  //     return AlertDialog(
-  //       title: Text(alertName),
-  //       content: Text(text),
-  //       actions: [
-  //         TextButton(
-  //             onPressed: (){
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text(actionBtn))
-  //       ],
-  //     );
-  //   }
-  //   );
-  // }
+  showAlert(String alertName, String text){
+    String actionBtn = "OK";
+    return showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+        title: Text(alertName),
+        content: Text(text),
+        actions: [
+          TextButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: Text(actionBtn))
+        ],
+      );
+    }
+    );
+  }
 
 }

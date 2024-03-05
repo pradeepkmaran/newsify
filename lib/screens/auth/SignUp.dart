@@ -115,24 +115,24 @@ class _SignUpFormState extends State<SignUpForm> {
                       if (user != null) {
                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VerifyEmailPage()));
                       } else {
-                        // Show alert for login failure
+                        showAlert("Login Failed", "Failed to log in");
                         print("Login failed");
                       }
                     });
                   } else {
-                    // Show alert for password mismatch
+                    showAlert("Password mismatch", "Password and Confirm password did not match");
                     print("Passwords do not match");
                   }
                 } else if (usernameStatus == 0) {
-                  // Show alert for non-unique username
+                  showAlert("Username already exists", "Enter unique username");
                   print("Username is not unique");
                 } else if (usernameStatus == -1) {
-                  // Show alert for invalid username
+                  showAlert("Username not valid", "Username must consist of alphabets,numbers, _ and .");
                   print("Username is not valid");
                 }
               });
             } else {
-              // Show alert for empty fields
+              showAlert("Fields empty", "Enter all fields to signup");
               print("Fill all details");
             }
           },
@@ -154,33 +154,33 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  // showAlert(String alertName, String text){
-  //   String actionBtn = "OK";
-  //   if(alertName=='Congratulations'){
-  //     setState(() {
-  //       actionBtn = 'Sign in';
-  //     });
-  //   }
-  //   return showDialog(context: context, builder: (BuildContext context){
-  //     return AlertDialog(
-  //       title: Text(alertName),
-  //       content: Text(text),
-  //       actions: [
-  //         TextButton(
-  //             onPressed: (){
-  //               if(actionBtn == 'Sign in'){
-  //                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-  //               }
-  //               else {
-  //                 Navigator.of(context).pop();
-  //               }
-  //             },
-  //             child: Text(actionBtn))
-  //       ],
-  //     );
-  //   }
-  //   );
-  // }
+  showAlert(String alertName, String text){
+    String actionBtn = "OK";
+    if(alertName=='Success'){
+      setState(() {
+        actionBtn = 'Sign in';
+      });
+    }
+    return showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+        title: Text(alertName),
+        content: Text(text),
+        actions: [
+          TextButton(
+              onPressed: (){
+                if(actionBtn == 'Sign in'){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                }
+                else {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text(actionBtn))
+        ],
+      );
+    }
+    );
+  }
 }
 
 
