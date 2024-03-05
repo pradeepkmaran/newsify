@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:newsify/screens/home/HomePage.dart';
 import 'package:newsify/services/ApiServices.dart';
 import 'package:newsify/services/AuthServices.dart';
-import 'package:newsify/services/firestoreServices.dart';
+import 'package:newsify/services/FirestoreServices.dart';
+import 'package:newsify/screens/home/VerifyEmailPage.dart';
 import 'LoginPage.dart';
 
 class SignUp extends StatelessWidget {
@@ -112,7 +113,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   if (pw == conpw) {
                     authService.userSignUp(email, pw, username).then((user) {
                       if (user != null) {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage(category: "general",)));
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VerifyEmailPage()));
                       } else {
                         // Show alert for login failure
                         print("Login failed");

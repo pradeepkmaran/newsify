@@ -1,7 +1,7 @@
 
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:newsify/services/firestoreServices.dart';
+import 'package:newsify/services/FirestoreServices.dart';
 
 class AuthService{
   final authInstance = FirebaseAuth.instance;

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:newsify/screens/home/HomePage.dart';
-import 'package:newsify/services/firestoreServices.dart';
+import 'package:newsify/services/FirestoreServices.dart';
 
 import 'package:newsify/screens/auth/LoginPage.dart';
 

@@ -99,7 +99,7 @@ class FirestoreServices {
           articles.add(data);
         }
       });
-      print(articles);
+      // print(articles);
       return articles;
     } catch (error) {
       print('Error fetching articles from Firestore: $error');
@@ -175,7 +175,7 @@ class FirestoreServices {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         comments.add(data);
       });
-      print(comments);
+      // print(comments);
       return comments;
     } catch (error) {
       print('Error fetching articles from Firestore: $error');
@@ -229,6 +229,20 @@ class FirestoreServices {
     }
   }
 
+  Future<void> updateSaved(String articleId, bool isSaved, String userId) async {
+    CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+    DocumentReference userRef = usersCollection.doc(userId);
+    DocumentSnapshot snapshot = await userRef.get();
+    if(isSaved){
+      print("Article saved by user ${userId}");
+      userRef.collection('saved').doc(articleId).set({'articleId': articleId});
+    }
+    else{
+      print("Article unsaved by user ${userId}");
+      userRef.collection('saved').doc(articleId).delete();
+    }
+  }
+
   Future<bool> checkLiked(String articleId, String userId) async {
     try {
       DocumentSnapshot res = await FirebaseFirestore.instance
@@ -242,6 +256,92 @@ class FirestoreServices {
     } catch (e) {
       print('Error checking like status: $e');
       return false; // Return false in case of an error
+    }
+  }
+
+  Future<bool> checkSaved(String articleId, String userId) async {
+    try {
+      DocumentSnapshot res = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('saved')
+          .doc(articleId)
+          .get();
+      return res.exists;
+    } catch (e) {
+      print('Error checking like status: $e');
+      return false; // Return false in case of an error
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchSearchNews(String searchKey) async {
+    print(searchKey);
+    List<Map<String, dynamic>> results = [];
+    try {
+      List<String> searchKeyList = searchKey.split(' ');
+      print("*******************");
+      print(searchKeyList);
+      CollectionReference newsCollection = FirebaseFirestore.instance.collection('news');
+      QuerySnapshot newsSnapshot = await newsCollection.get();
+      for (QueryDocumentSnapshot newsDoc in newsSnapshot.docs) {
+        Map<String, dynamic> newsMp = newsDoc.data() as Map<String, dynamic>;
+        List<String> chkWords = newsMp['description'].split(' ');
+        List<String> checkWords = [];
+        chkWords.forEach((element) {
+          checkWords.add(element.toLowerCase());
+        });
+        searchKeyList.forEach((element) {
+          if(checkWords.contains(element)){
+            results.add(newsMp);
+          }
+        });
+        chkWords.clear(); checkWords.clear();
+        chkWords = newsMp['title'].split(' ');
+        chkWords.forEach((element) {
+          checkWords.add(element.toLowerCase());
+        });
+        searchKeyList.forEach((element) {
+          if(checkWords.contains(element.toLowerCase())){
+            if(!results.contains(newsMp)){
+              results.add(newsMp);
+            }
+          }
+        });
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+    return results;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchSavedNews(String userId) async {
+    try {
+      List<Map<String, dynamic>> articles = [];
+
+      print(userId);
+      // Query Firestore for documents in the "saved" collection
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('saved')
+          .get();
+
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        String articleId = doc.id;
+
+        DocumentSnapshot articleDoc = await FirebaseFirestore.instance
+            .collection('news')
+            .doc(articleId)
+            .get();
+
+        if (articleDoc.exists) {
+          articles.add(articleDoc.data() as Map<String, dynamic>);
+        }
+      }
+      return articles;
+    } catch (error) {
+      print('Error fetching articles from Firestore: $error');
+      return [];
     }
   }
 

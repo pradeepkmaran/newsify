@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newsify/components/CommentTile.dart';
-import 'package:newsify/services/firestoreServices.dart';
+import 'package:newsify/services/FirestoreServices.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:newsify/components/CommentTile.dart';
-import 'package:newsify/services/firestoreServices.dart';
+import 'package:newsify/services/FirestoreServices.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -39,8 +39,11 @@ class _CommentBoxState extends State<CommentBox> {
   }
 
   Future<void> _refreshData() async {
-    comments = await firestoreServices.fetchCommentsFromDB(widget.articleId);
-    setState(() {});
+    final result = await firestoreServices.fetchCommentsFromDB(widget.articleId);
+    setState(() {
+      print(result);
+      comments = result;
+    });
   }
 
   @override
@@ -62,7 +65,7 @@ class _CommentBoxState extends State<CommentBox> {
               return Center(
                 child: Text('Error: ${snapshot.error}'),
               );
-            } else if (snapshot.data!.length > 1) {
+            } else if (snapshot.data!.length > 0) {
               List<Map<String, dynamic>>? comments = snapshot.data;
               return ListView.builder(
                 itemCount: comments?.length,

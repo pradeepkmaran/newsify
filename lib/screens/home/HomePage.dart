@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:newsify/models/ArticleModel.dart';
+import 'package:newsify/pages/SearchLandPage.dart';
 import 'package:newsify/screens/drawer/Drawer.dart';
 import 'package:newsify/services/ApiServices.dart';
 import 'package:newsify/components/CustomListTile.dart';
 import 'package:newsify/components/CommentTile.dart';
-import 'package:newsify/services/firestoreServices.dart';
+import 'package:newsify/services/FirestoreServices.dart';
 import 'package:newsify/models/CategoryModel.dart';
 import 'package:newsify/pages/Categories.dart';
 import 'package:newsify/screens/home/CategoryCard.dart';
@@ -20,7 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ApiService apiService = ApiService();
   FirestoreServices firestoreServices = FirestoreServices();
-
+  TextEditingController searchController = TextEditingController();
   List<CategoryModel> myCategories = List<CategoryModel>.generate(0, (index) => CategoryModel());
 
   @override
@@ -54,6 +55,27 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search articles...',
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        if(searchController.text.isNotEmpty){
+                          String searchKey = searchController.text;
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchLandPage(searchKey: searchKey)));
+                          setState(() {
+                            searchController.clear();
+                          });
+                        }
+                      },
+                      icon: Icon(Icons.search), // Customize the icon as needed
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 5.0, 0, 8.0),
                 child: SingleChildScrollView(
